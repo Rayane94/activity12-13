@@ -1,50 +1,26 @@
-import React, { useState } from 'react';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import store from './redux/store';
-import { addTodo, toggleTodo } from './redux/todoSlice';
-
-function TodoApp() {
-  const [input, setInput] = useState('');
-  const todos = useSelector(state => state.todos.todos);
-  const dispatch = useDispatch();
-
-  const handleAddTodo = () => {
-    if (input.trim() !== '') {
-      dispatch(addTodo(input));
-      setInput('');
-    }
-  };
-
-  return (
-    <div style={{ padding: '1rem' }}>
-      <h1>Liste des tâches (Redux)</h1>
-      <input
-        type="text"
-        placeholder="Ajouter une tâche..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
-      <button onClick={handleAddTodo}>Ajouter</button>
-      <ul>
-        {todos.map((todo) => (
-          <li
-            key={todo.id}
-            onClick={() => dispatch(toggleTodo(todo.id))}
-            style={{ textDecoration: todo.completed ? 'line-through' : 'none', cursor: 'pointer' }}
-          >
-            {todo.text}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { increment, decrement, reset } from './redux/counterSlice';
+import { Container, Button } from 'react-bootstrap';
 
 function App() {
+  const count = useSelector(state => state.counter.count);
+  const dispatch = useDispatch();
+
   return (
-    <Provider store={store}>
-      <TodoApp />
-    </Provider>
+    <Container className="my-4">
+      <h1>Counter Example</h1>
+      <h2>Count: {count}</h2>
+      <Button onClick={() => dispatch(increment())} variant="success" className="me-2">
+        Increment
+      </Button>
+      <Button onClick={() => dispatch(decrement())} variant="warning" className="me-2">
+        Decrement
+      </Button>
+      <Button onClick={() => dispatch(reset())} variant="danger">
+        Reset
+      </Button>
+    </Container>
   );
 }
 
